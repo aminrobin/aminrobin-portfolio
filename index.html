@@ -15,10 +15,11 @@ html{scroll-behavior:smooth}
 body{background:var(--dark);color:var(--text);font-family:var(--font-body);font-size:15px;line-height:1.7}
 
 nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(13,13,13,0.95);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 2.5rem;height:60px}
-.nav-brand{font-family:var(--font-head);font-size:18px;letter-spacing:1px;color:var(--gold)}
+.nav-brand{font-family:var(--font-head);font-size:18px;letter-spacing:1px;color:var(--gold);cursor:pointer}
 .nav-links{display:flex;gap:2rem;align-items:center}
 .nav-link{color:var(--muted);font-size:13px;letter-spacing:1.5px;text-transform:uppercase;transition:color 0.2s;cursor:pointer}
 .nav-link:hover{color:var(--gold)}
+.admin-indicator{font-size:11px;letter-spacing:1px;color:var(--gold);border:1px solid var(--gold);padding:3px 10px;cursor:pointer;display:none}
 
 #hero{height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:2rem;background:linear-gradient(180deg,#0a0a0a 0%,#141210 100%);position:relative;overflow:hidden}
 #hero::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 50% at 50% 40%,rgba(201,168,76,0.06) 0%,transparent 70%)}
@@ -30,7 +31,7 @@ nav{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(13,13,13,0.9
 .hero-cta{margin-top:2.5rem;display:flex;gap:1rem}
 .btn{padding:10px 28px;font-size:12px;letter-spacing:2px;text-transform:uppercase;text-decoration:none;border:1px solid;cursor:pointer;transition:all 0.2s;font-family:var(--font-body)}
 .btn-primary{background:var(--gold);border-color:var(--gold);color:#0d0d0d}
-.btn-primary:hover{background:var(--gold-light);border-color:var(--gold-light)}
+.btn-primary:hover{background:var(--gold-light)}
 .btn-outline{background:transparent;border-color:var(--border);color:var(--muted)}
 .btn-outline:hover{border-color:var(--gold);color:var(--gold)}
 
@@ -44,9 +45,8 @@ section{padding:80px 2.5rem;max-width:1100px;margin:0 auto}
 .about-photo{width:100%;height:100%;object-fit:cover;display:block;border:1px solid var(--border)}
 .about-photo-placeholder{width:100%;height:100%;background:var(--dark3);border:1px solid var(--border);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;cursor:pointer;transition:border-color 0.2s}
 .about-photo-placeholder:hover{border-color:var(--gold)}
-.about-photo-placeholder svg{opacity:0.6}
 .about-photo-placeholder span{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--muted)}
-.photo-change-btn{position:absolute;bottom:10px;right:10px;background:rgba(13,13,13,0.85);border:1px solid var(--gold);color:var(--gold);font-size:11px;letter-spacing:1.5px;text-transform:uppercase;padding:6px 12px;cursor:pointer;font-family:var(--font-body)}
+.photo-change-btn{position:absolute;bottom:10px;right:10px;background:rgba(13,13,13,0.85);border:1px solid var(--gold);color:var(--gold);font-size:11px;letter-spacing:1.5px;text-transform:uppercase;padding:6px 12px;cursor:pointer;font-family:var(--font-body);display:none}
 #photo-input{display:none}
 .about-text p{color:var(--muted);margin-bottom:1rem}
 .about-meta{margin-top:1.5rem;display:flex;flex-wrap:wrap;gap:0.5rem}
@@ -64,42 +64,57 @@ section{padding:80px 2.5rem;max-width:1100px;margin:0 auto}
 
 .grid-row{display:flex;align-items:flex-start;gap:1.5rem}
 .proj-grid{flex:1;display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.5rem}
-.add-btn{flex-shrink:0;width:48px;height:48px;border:1px solid var(--gold);background:transparent;color:var(--gold);font-size:26px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s;margin-top:4px;font-family:var(--font-body)}
+.add-btn{flex-shrink:0;width:48px;height:48px;border:1px solid var(--gold);background:transparent;color:var(--gold);font-size:26px;cursor:pointer;display:none;align-items:center;justify-content:center;transition:all 0.2s;margin-top:4px}
 .add-btn:hover{background:rgba(201,168,76,0.12)}
+.admin-active .add-btn{display:flex}
 
 .empty-state{grid-column:1/-1;padding:3rem;text-align:center;border:1px dashed var(--border);color:var(--muted);font-size:13px;letter-spacing:1px}
 .empty-state span{display:block;font-size:28px;margin-bottom:0.5rem;opacity:0.4}
-.loading-state{grid-column:1/-1;padding:2rem;text-align:center;color:var(--muted);font-size:13px;letter-spacing:1px}
+.loading-state{grid-column:1/-1;padding:2rem;text-align:center;color:var(--muted);font-size:13px}
 
+/* VIDEO CARD */
 .proj-card{background:var(--dark2);border:1px solid var(--border);overflow:hidden;transition:border-color 0.2s;position:relative}
 .proj-card:hover{border-color:var(--gold)}
 .proj-thumb{width:100%;aspect-ratio:16/9;background:var(--dark3);position:relative;overflow:hidden;cursor:pointer}
-.proj-thumb iframe{width:100%;height:100%;border:none;display:none}
+.proj-thumb img.thumb-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.proj-thumb iframe{position:absolute;inset:0;width:100%;height:100%;border:none;display:none}
 .proj-thumb.loaded iframe{display:block}
 .proj-thumb.loaded .thumb-cover{display:none}
-.thumb-cover{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px}
-.play-btn{width:48px;height:48px;border:1.5px solid var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;transition:background 0.2s}
+.thumb-cover{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:rgba(0,0,0,0.3)}
+.play-btn{width:52px;height:52px;border:1.5px solid var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;transition:background 0.2s;background:rgba(0,0,0,0.5)}
 .play-btn svg{fill:var(--gold);margin-left:3px}
-.thumb-cover:hover .play-btn{background:rgba(201,168,76,0.15)}
-.thumb-label{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--muted)}
+.thumb-cover:hover .play-btn{background:rgba(201,168,76,0.25)}
 .proj-info{padding:1rem 1.25rem}
 .proj-cat{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:6px}
 .proj-title{font-family:var(--font-head);font-size:16px;color:var(--text);margin-bottom:6px}
 .proj-desc{font-size:13px;color:var(--muted);line-height:1.6}
-.card-del{position:absolute;top:8px;right:8px;background:rgba(13,13,13,0.8);border:1px solid var(--border);color:var(--muted);width:26px;height:26px;font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;opacity:0;transition:opacity 0.2s;z-index:10}
-.proj-card:hover .card-del,.pdf-card:hover .card-del{opacity:1}
+.card-del{position:absolute;top:8px;right:8px;background:rgba(13,13,13,0.85);border:1px solid var(--border);color:var(--muted);width:28px;height:28px;font-size:14px;cursor:pointer;display:none;align-items:center;justify-content:center;z-index:10;transition:all 0.2s}
 .card-del:hover{border-color:#c0392b;color:#c0392b}
+.admin-active .card-del{display:flex}
 
-.pdf-card{background:var(--dark2);border:1px solid var(--border);padding:1.5rem;display:flex;flex-direction:column;gap:1rem;transition:border-color 0.2s;position:relative}
+/* PDF CARD */
+.pdf-card{background:var(--dark2);border:1px solid var(--border);overflow:hidden;transition:border-color 0.2s;position:relative;cursor:pointer}
 .pdf-card:hover{border-color:var(--gold)}
-.pdf-icon{width:44px;height:56px;background:var(--dark3);border:1px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.pdf-title{font-family:var(--font-head);font-size:15px;color:var(--text);margin-bottom:4px}
-.pdf-desc{font-size:13px;color:var(--muted)}
-.pdf-actions{display:flex;gap:0.75rem;align-items:center;flex-wrap:wrap}
-.btn-request{padding:8px 20px;font-size:11px;letter-spacing:1.5px;text-transform:uppercase;background:transparent;border:1px solid var(--gold);color:var(--gold);cursor:pointer;transition:all 0.2s;font-family:var(--font-body)}
-.btn-request:hover{background:rgba(201,168,76,0.1)}
-.pdf-lock{font-size:11px;color:var(--muted);letter-spacing:1px;display:flex;align-items:center;gap:5px}
+.pdf-preview{width:100%;aspect-ratio:16/9;background:var(--dark3);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;transition:background 0.2s}
+.pdf-card:hover .pdf-preview{background:#1a1a1a}
+.pdf-preview svg{opacity:0.7}
+.pdf-preview-label{font-size:11px;letter-spacing:2px;text-transform:uppercase;color:var(--muted)}
+.pdf-info{padding:1rem 1.25rem}
+.pdf-cat{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);margin-bottom:6px}
+.pdf-title-text{font-family:var(--font-head);font-size:16px;color:var(--text);margin-bottom:6px}
+.pdf-desc-text{font-size:13px;color:var(--muted);line-height:1.6}
+.pdf-open-hint{font-size:11px;color:var(--gold);letter-spacing:1px;padding:0 1.25rem 1rem;display:flex;align-items:center;gap:6px}
 
+/* PDF VIEWER MODAL */
+#pdf-viewer-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:300;flex-direction:column}
+#pdf-viewer-modal.open{display:flex}
+.pdf-viewer-bar{display:flex;align-items:center;justify-content:space-between;padding:0 1.5rem;height:52px;background:var(--dark2);border-bottom:1px solid var(--border);flex-shrink:0}
+.pdf-viewer-title{font-family:var(--font-head);font-size:15px;color:var(--text)}
+.pdf-viewer-close{background:transparent;border:1px solid var(--border);color:var(--muted);width:32px;height:32px;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all 0.2s}
+.pdf-viewer-close:hover{border-color:var(--gold);color:var(--gold)}
+#pdf-frame{flex:1;border:none;background:#fff}
+
+/* MODALS */
 .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);z-index:200;align-items:center;justify-content:center;padding:1rem}
 .modal-overlay.open{display:flex}
 .modal{background:var(--dark2);border:1px solid var(--border);padding:2rem;max-width:500px;width:100%;max-height:90vh;overflow-y:auto}
@@ -117,13 +132,19 @@ section{padding:80px 2.5rem;max-width:1100px;margin:0 auto}
 .btn-send:disabled{opacity:0.5;cursor:not-allowed}
 .btn-cancel{padding:11px 20px;background:transparent;border:1px solid var(--border);color:var(--muted);font-size:12px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;font-family:var(--font-body)}
 .btn-cancel:hover{border-color:var(--muted);color:var(--text)}
-.success-msg{display:none;text-align:center;padding:1.5rem 0}
-.success-msg h4{font-family:var(--font-head);font-size:18px;color:var(--text);margin-bottom:0.5rem}
-.success-msg p{font-size:13px;color:var(--muted)}
 
 .type-toggle{display:flex;margin-bottom:1rem;margin-top:0.5rem}
 .type-toggle button{flex:1;padding:9px;background:var(--dark3);border:1px solid var(--border);color:var(--muted);font-size:11px;letter-spacing:1.5px;text-transform:uppercase;cursor:pointer;font-family:var(--font-body);transition:all 0.2s}
 .type-toggle button.active{background:rgba(201,168,76,0.15);border-color:var(--gold);color:var(--gold)}
+
+.file-drop{border:1px dashed var(--border);padding:1.5rem;text-align:center;cursor:pointer;transition:border-color 0.2s;margin-top:0.5rem}
+.file-drop:hover{border-color:var(--gold)}
+.file-drop p{font-size:13px;color:var(--muted)}
+.file-drop.has-file{border-color:var(--gold)}
+.file-drop.has-file p{color:var(--gold)}
+#pdf-file-input{display:none}
+.upload-progress{margin-top:0.75rem;height:3px;background:var(--border);display:none}
+.upload-progress-bar{height:100%;background:var(--gold);width:0%;transition:width 0.3s}
 
 #contact{border-top:1px solid var(--border)}
 .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:4rem;margin-top:2.5rem}
@@ -136,18 +157,19 @@ section{padding:80px 2.5rem;max-width:1100px;margin:0 auto}
 .contact-form textarea{height:120px;resize:none}
 footer{text-align:center;padding:2rem;border-top:1px solid var(--border);font-size:12px;color:var(--muted);letter-spacing:1px}
 .hidden{display:none!important}
-.toast{position:fixed;bottom:2rem;right:2rem;background:var(--dark2);border:1px solid var(--gold);color:var(--gold);padding:12px 20px;font-size:13px;letter-spacing:1px;z-index:300;opacity:0;transition:opacity 0.3s}
+.toast{position:fixed;bottom:2rem;right:2rem;background:var(--dark2);border:1px solid var(--gold);color:var(--gold);padding:12px 20px;font-size:13px;letter-spacing:1px;z-index:400;opacity:0;transition:opacity 0.3s;pointer-events:none}
 .toast.show{opacity:1}
 </style>
 </head>
 <body>
 
 <nav>
-  <span class="nav-brand">Amin Robin</span>
+  <span class="nav-brand" onclick="toggleAdminLogin()" title="Admin login">Amin Robin</span>
   <div class="nav-links">
     <span class="nav-link" onclick="goTo('about')">About</span>
     <span class="nav-link" onclick="goTo('works')">Works</span>
     <span class="nav-link" onclick="goTo('contact')">Contact</span>
+    <span class="admin-indicator" id="admin-badge" onclick="logoutAdmin()">Admin ✕</span>
   </div>
 </nav>
 
@@ -165,12 +187,12 @@ footer{text-align:center;padding:2rem;border-top:1px solid var(--border);font-si
 
 <section id="about">
   <div class="about-photo-wrap">
-    <div class="about-photo-placeholder" id="photo-placeholder" onclick="document.getElementById('photo-input').click()">
+    <div class="about-photo-placeholder" id="photo-placeholder" onclick="adminPhotoClick()">
       <svg width="36" height="36" viewBox="0 0 36 36"><circle cx="18" cy="13" r="7" fill="none" stroke="#c9a84c" stroke-width="1.5"/><path d="M4 32c0-7.7 6.3-14 14-14s14 6.3 14 14" fill="none" stroke="#c9a84c" stroke-width="1.5"/></svg>
-      <span>Click to upload photo</span>
+      <span>Photo</span>
     </div>
     <img class="about-photo hidden" id="about-img" src="" alt="Amin Robin"/>
-    <button class="photo-change-btn hidden" id="photo-change-btn" onclick="document.getElementById('photo-input').click()">Change Photo</button>
+    <button class="photo-change-btn" id="photo-change-btn" onclick="adminPhotoClick()">Change Photo</button>
     <input type="file" id="photo-input" accept="image/*" onchange="handlePhoto(event)"/>
   </div>
   <div>
@@ -232,25 +254,53 @@ footer{text-align:center;padding:2rem;border-top:1px solid var(--border);font-si
   </div>
 </section>
 
-<!-- ADD MODAL -->
+<!-- PDF VIEWER -->
+<div id="pdf-viewer-modal">
+  <div class="pdf-viewer-bar">
+    <span class="pdf-viewer-title" id="pdf-viewer-title"></span>
+    <button class="pdf-viewer-close" onclick="closePdfViewer()">✕</button>
+  </div>
+  <iframe id="pdf-frame" src=""></iframe>
+</div>
+
+<!-- ADMIN LOGIN MODAL -->
+<div class="modal-overlay" id="login-modal">
+  <div class="modal" style="max-width:360px">
+    <h3>Admin Login</h3>
+    <p class="sub">Enter your password to manage portfolio content.</p>
+    <label>Password</label>
+    <input type="password" id="admin-password" placeholder="Enter password" onkeydown="if(event.key==='Enter')doLogin()"/>
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeLoginModal()">Cancel</button>
+      <button class="btn-send" onclick="doLogin()">Login</button>
+    </div>
+  </div>
+</div>
+
+<!-- ADD PROJECT MODAL -->
 <div class="modal-overlay" id="add-modal">
   <div class="modal">
     <h3>Add New Project</h3>
-    <p class="sub">Fill in the details. Saved permanently to your portfolio.</p>
+    <p class="sub">Saved permanently to your portfolio.</p>
     <div class="type-toggle">
       <button id="type-video" class="active" onclick="setType('video')">Video</button>
       <button id="type-pdf" onclick="setType('pdf')">PDF / Script</button>
     </div>
     <div id="video-fields">
-      <label>Video URL (YouTube or Vimeo)</label>
+      <label>YouTube or Vimeo URL</label>
       <input type="url" id="add-url" placeholder="https://youtube.com/watch?v=..."/>
     </div>
     <div id="pdf-fields" class="hidden">
-      <label>PDF Label</label>
-      <input type="text" id="add-pdf-name" placeholder="e.g. Script_BrandCampaign_2024.pdf"/>
+      <label>Upload PDF File</label>
+      <div class="file-drop" id="file-drop" onclick="document.getElementById('pdf-file-input').click()">
+        <svg width="28" height="28" viewBox="0 0 28 28" style="margin-bottom:8px;opacity:0.5"><path d="M14 4v14M8 12l6-8 6 8" stroke="#c9a84c" stroke-width="1.5" fill="none" stroke-linecap="round"/><path d="M4 20v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2" stroke="#c9a84c" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
+        <p id="file-drop-label">Click to select a PDF file</p>
+      </div>
+      <input type="file" id="pdf-file-input" accept="application/pdf" onchange="handlePdfSelect(event)"/>
+      <div class="upload-progress" id="upload-progress"><div class="upload-progress-bar" id="upload-bar"></div></div>
     </div>
     <label>Project Title</label>
-    <input type="text" id="add-title" placeholder="e.g. Echoes of the River"/>
+    <input type="text" id="add-title" placeholder="e.g. Brand Campaign Script"/>
     <label>Category</label>
     <select id="add-cat">
       <option value="documentary">Documentary</option>
@@ -267,34 +317,6 @@ footer{text-align:center;padding:2rem;border-top:1px solid var(--border);font-si
     <div class="modal-actions">
       <button class="btn-cancel" onclick="closeAddModal()">Cancel</button>
       <button class="btn-send" id="add-submit-btn" onclick="addProject()">Save to Portfolio</button>
-    </div>
-  </div>
-</div>
-
-<!-- ACCESS MODAL -->
-<div class="modal-overlay" id="access-modal">
-  <div class="modal">
-    <div id="access-form">
-      <h3>Request Access</h3>
-      <p class="sub" id="access-subtitle"></p>
-      <label>Full Name</label>
-      <input type="text" id="req-name" placeholder="Your name"/>
-      <label>Email Address</label>
-      <input type="email" id="req-email" placeholder="your@email.com"/>
-      <label>Organization / Role</label>
-      <input type="text" id="req-org" placeholder="Company or role"/>
-      <label>Reason for Access</label>
-      <textarea id="req-reason" placeholder="Briefly explain why…"></textarea>
-      <div class="modal-actions">
-        <button class="btn-cancel" onclick="closeAccessModal()">Cancel</button>
-        <button class="btn-send" onclick="submitRequest()">Send Request</button>
-      </div>
-    </div>
-    <div class="success-msg" id="access-success">
-      <svg width="40" height="40" viewBox="0 0 40 40" style="margin-bottom:1rem"><circle cx="20" cy="20" r="19" fill="none" stroke="#c9a84c" stroke-width="1.5"/><path d="M12 20l6 6 10-12" stroke="#c9a84c" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
-      <h4>Request Sent</h4>
-      <p>Amin will review and get back to you.</p>
-      <button class="btn-cancel" onclick="closeAccessModal()" style="margin-top:1.5rem;width:100%">Close</button>
     </div>
   </div>
 </div>
@@ -327,10 +349,10 @@ footer{text-align:center;padding:2rem;border-top:1px solid var(--border);font-si
 <footer><p>&copy; 2025 Amin Robin &nbsp;·&nbsp; Writer &nbsp;·&nbsp; Director</p></footer>
 <div class="toast" id="toast"></div>
 
-<!-- FIREBASE -->
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
 import { getFirestore, collection, addDoc, getDocs, deleteDoc, doc, query, orderBy } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-storage.js";
 
 const app = initializeApp({
   apiKey: "AIzaSyBpXYcy93NXhuMr_usfPSUxuznTmJtJq-g",
@@ -340,8 +362,12 @@ const app = initializeApp({
   messagingSenderId: "85119723908",
   appId: "1:85119723908:web:fb78bb8ed6447a153e15d1"
 });
+
 const db = getFirestore(app);
+const storage = getStorage(app);
+
 window._db = db;
+window._storage = storage;
 window._col = (tab) => collection(db, 'projects_' + tab);
 window._addDoc = addDoc;
 window._getDocs = getDocs;
@@ -349,20 +375,55 @@ window._deleteDoc = deleteDoc;
 window._doc = doc;
 window._query = query;
 window._orderBy = orderBy;
+window._ref = ref;
+window._uploadBytesResumable = uploadBytesResumable;
+window._getDownloadURL = getDownloadURL;
+window._deleteObject = deleteObject;
 
-// load all tabs on start
 loadProjects('wd');
 loadProjects('cw');
 loadProjects('viz');
 </script>
 
 <script>
-var activeTab='wd', addType='video';
+// ── ADMIN ──────────────────────────────────────────
+var ADMIN_PASS = 'AminRobin2025'; // Change this password!
+var isAdmin = false;
 
+function toggleAdminLogin(){
+  if(isAdmin){ logoutAdmin(); return; }
+  document.getElementById('admin-password').value='';
+  document.getElementById('login-modal').classList.add('open');
+  setTimeout(()=>document.getElementById('admin-password').focus(),100);
+}
+function closeLoginModal(){ document.getElementById('login-modal').classList.remove('open'); }
+function doLogin(){
+  var pw=document.getElementById('admin-password').value;
+  if(pw===ADMIN_PASS){
+    isAdmin=true;
+    document.body.classList.add('admin-active');
+    document.getElementById('admin-badge').style.display='block';
+    document.getElementById('photo-change-btn').style.display='block';
+    closeLoginModal();
+    showToast('Admin mode on. You can now add or remove projects.');
+  } else {
+    showToast('Incorrect password.');
+  }
+}
+function logoutAdmin(){
+  isAdmin=false;
+  document.body.classList.remove('admin-active');
+  document.getElementById('admin-badge').style.display='none';
+  document.getElementById('photo-change-btn').style.display='none';
+  showToast('Admin mode off.');
+}
+function adminPhotoClick(){ if(isAdmin) document.getElementById('photo-input').click(); }
+
+// ── NAV ───────────────────────────────────────────
 function goTo(id){
   var el=document.getElementById(id);
   if(!el) return;
-  var top=0, obj=el;
+  var top=0,obj=el;
   while(obj){top+=obj.offsetTop;obj=obj.offsetParent;}
   window.scrollTo({top:top-70,behavior:'smooth'});
 }
@@ -373,6 +434,7 @@ function showToast(msg){
   setTimeout(()=>t.classList.remove('show'),3000);
 }
 
+// ── PHOTO ─────────────────────────────────────────
 function handlePhoto(e){
   var file=e.target.files[0]; if(!file) return;
   var r=new FileReader();
@@ -380,11 +442,12 @@ function handlePhoto(e){
     var img=document.getElementById('about-img');
     img.src=ev.target.result; img.classList.remove('hidden');
     document.getElementById('photo-placeholder').classList.add('hidden');
-    document.getElementById('photo-change-btn').classList.remove('hidden');
   };
   r.readAsDataURL(file);
 }
 
+// ── TABS ──────────────────────────────────────────
+var activeTab='wd';
 function switchTab(t){
   ['wd','cw','viz'].forEach(id=>document.getElementById('panel-'+id).classList.add('hidden'));
   document.getElementById('panel-'+t).classList.remove('hidden');
@@ -403,10 +466,18 @@ function filterWD(cat,btn){
   });
 }
 
+// ── VIDEO ─────────────────────────────────────────
 function loadVideo(el,src){
-  var iframe=el.querySelector('iframe');
-  iframe.src=src+(src.includes('?')?'&':'?')+'autoplay=1';
-  el.classList.add('loaded');
+  if(!el.classList.contains('loaded')){
+    var iframe=el.querySelector('iframe');
+    iframe.src=src+(src.includes('?')?'&':'?')+'autoplay=1';
+    el.classList.add('loaded');
+  }
+}
+
+function ytThumb(embedUrl){
+  var m=embedUrl.match(/embed\/([\w-]+)/);
+  return m ? 'https://img.youtube.com/vi/'+m[1]+'/hqdefault.jpg' : '';
 }
 
 function parseEmbedUrl(raw){
@@ -419,17 +490,19 @@ function parseEmbedUrl(raw){
   return null;
 }
 
-function playIconHTML(){
-  return '<div class="play-btn"><svg width="16" height="16" viewBox="0 0 16 16"><polygon points="4,2 14,8 4,14" fill="#c9a84c"/></svg></div><span class="thumb-label">Play</span>';
+// ── PDF VIEWER ────────────────────────────────────
+function openPdfViewer(url, title){
+  document.getElementById('pdf-viewer-title').textContent=title;
+  document.getElementById('pdf-frame').src=url;
+  document.getElementById('pdf-viewer-modal').classList.add('open');
+}
+function closePdfViewer(){
+  document.getElementById('pdf-viewer-modal').classList.remove('open');
+  document.getElementById('pdf-frame').src='';
 }
 
-function pdfIconHTML(){
-  return '<svg width="20" height="24" viewBox="0 0 20 24"><rect x="2" y="1" width="14" height="20" rx="1" fill="none" stroke="#c9a84c" stroke-width="1.5"/><path d="M13 1v5h5" stroke="#c9a84c" stroke-width="1.5" fill="none"/><text x="4" y="17" font-size="6" fill="#c9a84c" font-family="Georgia">PDF</text></svg>';
-}
-
-function lockIconHTML(){
-  return '<svg width="12" height="14" viewBox="0 0 12 14"><rect x="1" y="6" width="10" height="8" rx="1" stroke="#a09880" stroke-width="1.2" fill="none"/><path d="M3 6V4a3 3 0 0 1 6 0v2" stroke="#a09880" stroke-width="1.2" fill="none"/></svg>';
-}
+// ── RENDER CARDS ─────────────────────────────────
+var catLabels={documentary:'Documentary','short-film':'Short Film',tvc:'TVC',ovc:'OVC',av:'Corporate AV',promotional:'Promotional',script:'Script / Copywriting',other:'Other'};
 
 function renderCard(p, tab){
   var grid=document.getElementById(tab+'-grid');
@@ -437,16 +510,23 @@ function renderCard(p, tab){
   if(empty) empty.remove();
 
   if(p.type==='video'){
+    var thumb=ytThumb(p.embed);
+    var thumbHTML=thumb
+      ? '<img class="thumb-img" src="'+thumb+'" alt="'+p.title+'" loading="lazy"/>'
+      : '';
     var card=document.createElement('div');
     card.className='proj-card'; card.dataset.cat=p.cat; card.dataset.id=p.id;
     card.innerHTML=
-      '<button class="card-del" onclick="deleteProject(\''+p.id+'\',\''+tab+'\',this)" title="Remove">✕</button>'+
-      '<div class="proj-thumb" onclick="loadVideo(this,\''+p.embed+'\')">'+
-        '<div class="thumb-cover">'+playIconHTML()+'</div>'+
+      '<button class="card-del" onclick="deleteProject(\''+p.id+'\',\''+tab+'\',\''+( p.storageRef||'')+'\',this)">✕</button>'+
+      '<div class="proj-thumb" onclick="loadVideo(this,\''+p.embed+'\')" data-embed="'+p.embed+'">'+
+        thumbHTML+
+        '<div class="thumb-cover">'+
+          '<div class="play-btn"><svg width="16" height="16" viewBox="0 0 16 16"><polygon points="4,2 14,8 4,14" fill="#c9a84c"/></svg></div>'+
+        '</div>'+
         '<iframe allowfullscreen allow="autoplay"></iframe>'+
       '</div>'+
       '<div class="proj-info">'+
-        '<p class="proj-cat">'+p.catLabel+'</p>'+
+        '<p class="proj-cat">'+(catLabels[p.cat]||p.cat)+'</p>'+
         '<p class="proj-title">'+p.title+'</p>'+
         '<p class="proj-desc">'+p.desc+'</p>'+
       '</div>';
@@ -454,20 +534,26 @@ function renderCard(p, tab){
   } else {
     var card=document.createElement('div');
     card.className='pdf-card'; card.dataset.id=p.id;
+    var safeTitle=p.title.replace(/'/g,"\\'");
+    var safeUrl=p.pdfUrl||'';
+    card.onclick=function(){ openPdfViewer(safeUrl, p.title); };
     card.innerHTML=
-      '<button class="card-del" onclick="deleteProject(\''+p.id+'\',\''+tab+'\',this)" title="Remove">✕</button>'+
-      '<div style="display:flex;gap:1rem;align-items:flex-start">'+
-        '<div class="pdf-icon">'+pdfIconHTML()+'</div>'+
-        '<div><p class="pdf-title">'+p.title+'</p><p class="pdf-desc">'+p.desc+'</p></div>'+
+      '<button class="card-del" onclick="event.stopPropagation();deleteProject(\''+p.id+'\',\''+tab+'\',\''+( p.storageRef||'')+'\',this)">✕</button>'+
+      '<div class="pdf-preview">'+
+        '<svg width="40" height="48" viewBox="0 0 40 48"><rect x="2" y="2" width="28" height="36" rx="2" fill="none" stroke="#c9a84c" stroke-width="1.5"/><path d="M26 2v10h12" stroke="#c9a84c" stroke-width="1.5" fill="none"/><text x="6" y="30" font-size="8" fill="#c9a84c" font-family="Georgia,serif">PDF</text></svg>'+
+        '<span class="pdf-preview-label">Click to Read</span>'+
       '</div>'+
-      '<div class="pdf-actions">'+
-        '<button class="btn-request" onclick="openAccessModal(\''+p.title+'\')">Request Access</button>'+
-        '<span class="pdf-lock">'+lockIconHTML()+' Permission required</span>'+
-      '</div>';
+      '<div class="pdf-info">'+
+        '<p class="pdf-cat">'+(catLabels[p.cat]||p.cat)+'</p>'+
+        '<p class="pdf-title-text">'+p.title+'</p>'+
+        '<p class="pdf-desc-text">'+p.desc+'</p>'+
+      '</div>'+
+      '<p class="pdf-open-hint"><svg width="12" height="12" viewBox="0 0 12 12"><path d="M2 6h8M7 3l3 3-3 3" stroke="#c9a84c" stroke-width="1.2" fill="none" stroke-linecap="round"/></svg> Open to read</p>';
     grid.appendChild(card);
   }
 }
 
+// ── LOAD ──────────────────────────────────────────
 async function loadProjects(tab){
   var grid=document.getElementById(tab+'-grid');
   grid.innerHTML='<div class="loading-state">Loading…</div>';
@@ -475,28 +561,33 @@ async function loadProjects(tab){
     var q=window._query(window._col(tab), window._orderBy('created','asc'));
     var snap=await window._getDocs(q);
     grid.innerHTML='';
-    if(snap.empty){
-      grid.innerHTML='<div class="empty-state"><span>＋</span>Click the + button to add your first project</div>';
-      return;
-    }
-    snap.forEach(function(d){renderCard(Object.assign({id:d.id},d.data()),tab);});
+    if(snap.empty){ grid.innerHTML='<div class="empty-state"><span>＋</span>No projects yet</div>'; return; }
+    snap.forEach(d=>renderCard(Object.assign({id:d.id},d.data()),tab));
   } catch(e){
-    grid.innerHTML='<div class="empty-state"><span>＋</span>Click the + button to add your first project</div>';
+    grid.innerHTML='<div class="empty-state"><span>＋</span>No projects yet</div>';
   }
 }
 
-async function deleteProject(id, tab, btn){
+// ── DELETE ────────────────────────────────────────
+async function deleteProject(id, tab, storageRef, btn){
+  if(!isAdmin){ showToast('Admin login required.'); return; }
   if(!confirm('Remove this project?')) return;
   var card=btn.closest('.proj-card,.pdf-card');
   try{
     await window._deleteDoc(window._doc(window._db,'projects_'+tab,id));
+    if(storageRef){
+      try{ await window._deleteObject(window._ref(window._storage, storageRef)); } catch(e){}
+    }
     card.remove();
     var grid=document.getElementById(tab+'-grid');
     if(!grid.querySelector('.proj-card,.pdf-card'))
-      grid.innerHTML='<div class="empty-state"><span>＋</span>Click the + button to add your first project</div>';
+      grid.innerHTML='<div class="empty-state"><span>＋</span>No projects yet</div>';
     showToast('Project removed.');
   } catch(e){ alert('Could not delete. Try again.'); }
 }
+
+// ── ADD MODAL ─────────────────────────────────────
+var addType='video', selectedPdfFile=null;
 
 function setType(t){
   addType=t;
@@ -506,16 +597,31 @@ function setType(t){
   document.getElementById('pdf-fields').classList.toggle('hidden',t!=='pdf');
 }
 
-function openAddModal(tab){ activeTab=tab; document.getElementById('add-modal').classList.add('open'); }
+function openAddModal(tab){
+  if(!isAdmin){ showToast('Please login as admin to add projects.'); return; }
+  activeTab=tab; document.getElementById('add-modal').classList.add('open');
+}
 function closeAddModal(){
   document.getElementById('add-modal').classList.remove('open');
-  ['add-url','add-title','add-desc','add-pdf-name'].forEach(id=>document.getElementById(id).value='');
+  ['add-url','add-title','add-desc'].forEach(id=>document.getElementById(id).value='');
+  selectedPdfFile=null;
+  document.getElementById('file-drop-label').textContent='Click to select a PDF file';
+  document.getElementById('file-drop').classList.remove('has-file');
+  document.getElementById('upload-progress').style.display='none';
+  document.getElementById('upload-bar').style.width='0%';
   setType('video');
 }
 
-var catLabels={documentary:'Documentary','short-film':'Short Film',tvc:'TVC',ovc:'OVC',av:'Corporate AV',promotional:'Promotional',script:'Script / Copywriting',other:'Other'};
+function handlePdfSelect(e){
+  var file=e.target.files[0];
+  if(!file) return;
+  selectedPdfFile=file;
+  document.getElementById('file-drop-label').textContent='✓ '+file.name;
+  document.getElementById('file-drop').classList.add('has-file');
+}
 
 async function addProject(){
+  if(!isAdmin) return;
   var title=document.getElementById('add-title').value.trim();
   var desc=document.getElementById('add-desc').value.trim();
   var cat=document.getElementById('add-cat').value;
@@ -529,35 +635,44 @@ async function addProject(){
   if(addType==='video'){
     var raw=document.getElementById('add-url').value.trim();
     var embed=parseEmbedUrl(raw);
-    if(!embed){btn.disabled=false;btn.textContent='Save to Portfolio';alert('Please enter a valid YouTube or Vimeo URL.');return;}
+    if(!embed){btn.disabled=false;btn.textContent='Save to Portfolio';alert('Invalid YouTube or Vimeo URL.');return;}
     data.type='video'; data.embed=embed;
-  } else {
-    data.type='pdf'; data.pdfName=document.getElementById('add-pdf-name').value.trim()||'Document';
-  }
+    try{
+      var docRef=await window._addDoc(window._col(activeTab),data);
+      data.id=docRef.id;
+      renderCard(data,activeTab);
+      closeAddModal();
+      showToast('Video saved! ✓');
+    } catch(e){ alert('Could not save. Check connection.'); }
 
-  try{
-    var ref=await window._addDoc(window._col(activeTab), data);
-    data.id=ref.id;
-    renderCard(data, activeTab);
-    closeAddModal();
-    showToast('Project saved permanently! ✓');
-  } catch(e){
-    alert('Could not save. Check your internet connection.');
+  } else {
+    if(!selectedPdfFile){btn.disabled=false;btn.textContent='Save to Portfolio';alert('Please select a PDF file.');return;}
+    var path='pdfs/'+Date.now()+'_'+selectedPdfFile.name;
+    var storRef=window._ref(window._storage, path);
+    var prog=document.getElementById('upload-progress');
+    var bar=document.getElementById('upload-bar');
+    prog.style.display='block';
+    var uploadTask=window._uploadBytesResumable(storRef, selectedPdfFile);
+    uploadTask.on('state_changed',
+      function(snap){ bar.style.width=Math.round(snap.bytesTransferred/snap.totalBytes*100)+'%'; btn.textContent='Uploading…'; },
+      function(err){ alert('Upload failed: '+err.message); btn.disabled=false; btn.textContent='Save to Portfolio'; },
+      async function(){
+        var url=await window._getDownloadURL(uploadTask.snapshot.ref);
+        data.type='pdf'; data.pdfUrl=url; data.storageRef=path;
+        try{
+          var docRef=await window._addDoc(window._col(activeTab),data);
+          data.id=docRef.id;
+          renderCard(data,activeTab);
+          closeAddModal();
+          showToast('PDF uploaded & saved! ✓');
+        } catch(e){ alert('Could not save metadata.'); }
+      }
+    );
   }
   btn.disabled=false; btn.textContent='Save to Portfolio';
 }
 
-var currentDoc='';
-function openAccessModal(doc){ currentDoc=doc; document.getElementById('access-subtitle').textContent='To access "'+doc+'", please fill in your details.'; document.getElementById('access-form').style.display=''; document.getElementById('access-success').style.display='none'; document.getElementById('access-modal').classList.add('open'); }
-function closeAccessModal(){ document.getElementById('access-modal').classList.remove('open'); ['req-name','req-email','req-org','req-reason'].forEach(id=>document.getElementById(id).value=''); }
-function submitRequest(){
-  var n=document.getElementById('req-name').value.trim(), e=document.getElementById('req-email').value.trim();
-  if(!n||!e){alert('Please fill in your name and email.');return;}
-  window.open('mailto:aminrobing@gmail.com?subject='+encodeURIComponent('Access Request: '+currentDoc)+'&body='+encodeURIComponent('Name: '+n+'\nEmail: '+e+'\nOrg: '+document.getElementById('req-org').value+'\nReason: '+document.getElementById('req-reason').value));
-  document.getElementById('access-form').style.display='none';
-  document.getElementById('access-success').style.display='block';
-}
-
+// ── CONTACT ───────────────────────────────────────
 function sendContact(){
   var n=document.getElementById('c-name').value.trim(),e=document.getElementById('c-email').value.trim(),m=document.getElementById('c-msg').value.trim();
   if(!n||!e||!m){alert('Please fill in all fields.');return;}
@@ -565,7 +680,7 @@ function sendContact(){
 }
 
 document.getElementById('add-modal').addEventListener('click',function(e){if(e.target===this)closeAddModal();});
-document.getElementById('access-modal').addEventListener('click',function(e){if(e.target===this)closeAccessModal();});
+document.getElementById('login-modal').addEventListener('click',function(e){if(e.target===this)closeLoginModal();});
 </script>
 </body>
 </html>
