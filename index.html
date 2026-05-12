@@ -291,13 +291,9 @@ footer{text-align:center;padding:2rem;border-top:1px solid var(--border);font-si
       <input type="url" id="add-url" placeholder="https://youtube.com/watch?v=..."/>
     </div>
     <div id="pdf-fields" class="hidden">
-      <label>Upload PDF File</label>
-      <div class="file-drop" id="file-drop" onclick="document.getElementById('pdf-file-input').click()">
-        <svg width="28" height="28" viewBox="0 0 28 28" style="margin-bottom:8px;opacity:0.5"><path d="M14 4v14M8 12l6-8 6 8" stroke="#c9a84c" stroke-width="1.5" fill="none" stroke-linecap="round"/><path d="M4 20v2a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-2" stroke="#c9a84c" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
-        <p id="file-drop-label">Click to select a PDF file</p>
-      </div>
-      <input type="file" id="pdf-file-input" accept="application/pdf" onchange="handlePdfSelect(event)"/>
-      <div class="upload-progress" id="upload-progress"><div class="upload-progress-bar" id="upload-bar"></div></div>
+      <label>Google Drive Link</label>
+      <input type="url" id="add-drive-url" placeholder="https://drive.google.com/file/d/.../view"/>
+      <p style="font-size:12px;color:var(--muted);margin-top:6px;">Upload PDF to Google Drive → Share → Anyone with link can view → paste link here.</p>
     </div>
     <label>Project Title</label>
     <input type="text" id="add-title" placeholder="e.g. Brand Campaign Script"/>
@@ -603,12 +599,7 @@ function openAddModal(tab){
 }
 function closeAddModal(){
   document.getElementById('add-modal').classList.remove('open');
-  ['add-url','add-title','add-desc'].forEach(id=>document.getElementById(id).value='');
-  selectedPdfFile=null;
-  document.getElementById('file-drop-label').textContent='Click to select a PDF file';
-  document.getElementById('file-drop').classList.remove('has-file');
-  document.getElementById('upload-progress').style.display='none';
-  document.getElementById('upload-bar').style.width='0%';
+  ['add-url','add-title','add-desc','add-drive-url'].forEach(id=>document.getElementById(id).value='');
   setType('video');
 }
 
@@ -646,28 +637,18 @@ async function addProject(){
     } catch(e){ alert('Could not save. Check connection.'); }
 
   } else {
-    if(!selectedPdfFile){btn.disabled=false;btn.textContent='Save to Portfolio';alert('Please select a PDF file.');return;}
-    var path='pdfs/'+Date.now()+'_'+selectedPdfFile.name;
-    var storRef=window._ref(window._storage, path);
-    var prog=document.getElementById('upload-progress');
-    var bar=document.getElementById('upload-bar');
-    prog.style.display='block';
-    var uploadTask=window._uploadBytesResumable(storRef, selectedPdfFile);
-    uploadTask.on('state_changed',
-      function(snap){ bar.style.width=Math.round(snap.bytesTransferred/snap.totalBytes*100)+'%'; btn.textContent='Uploading…'; },
-      function(err){ alert('Upload failed: '+err.message); btn.disabled=false; btn.textContent='Save to Portfolio'; },
-      async function(){
-        var url=await window._getDownloadURL(uploadTask.snapshot.ref);
-        data.type='pdf'; data.pdfUrl=url; data.storageRef=path;
-        try{
-          var docRef=await window._addDoc(window._col(activeTab),data);
-          data.id=docRef.id;
-          renderCard(data,activeTab);
-          closeAddModal();
-          showToast('PDF uploaded & saved! ✓');
-        } catch(e){ alert('Could not save metadata.'); }
-      }
-    );
+    var driveUrl=document.getElementById('add-drive-url').value.trim();
+    if(!driveUrl){btn.disabled=false;btn.textContent='Save to Portfolio';alert('Please paste a Google Drive link.');return;}
+    // Convert share URL to embed/preview URL
+    var previewUrl=driveUrl.replace('/view','/preview').replace('?usp=sharing','');
+    data.type='pdf'; data.pdfUrl=previewUrl;
+    try{
+      var docRef=await window._addDoc(window._col(activeTab),data);
+      data.id=docRef.id;
+      renderCard(data,activeTab);
+      closeAddModal();
+      showToast('PDF saved! ✓');
+    } catch(e){ alert('Could not save. Check connection.'); }
   }
   btn.disabled=false; btn.textContent='Save to Portfolio';
 }
